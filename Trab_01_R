@@ -1,0 +1,356 @@
+#Referências
+#https://cran.r-project.org/web/packages/markovchain/vignettes/an_introduction_to_markovchain_package.pdf
+
+#http://ecor.ib.usp.br/doku.php?id=02_tutoriais:tutorial3:start
+
+#http://ecologia.ib.usp.br/ecopop/doku.php?id=roteiros:matriz
+
+#https://www.rdocumentation.org/packages/markovchain/versions/0.8.5-2/topics/firstPassageMultiple
+
+#https://www.rdocumentation.org/packages/markovchain/versions/0.8.5-2/topics/transition2Generator
+
+#https://www.datacamp.com/community/tutorials/markov-chain-analysis-r?utm_source=adwords_ppc&utm_campaignid=1455363063&utm_adgroupid=65083631748&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=332602034364&utm_targetid=aud-299261629574:dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1001686&gclid=EAIaIQobChMIoeyQ5on47AIVAwqRCh0jPQ1TEAAYASAAEgL3_vD_BwE
+
+#https://www.rdocumentation.org/packages/SoDA/versions/1.0-6/topics/triDiagonal
+
+#http://www.mat.ufrgs.br/~giacomo/Softwares/R/Dobrow%20-%20Stochastic%20with%20R/ch7.pdf
+
+#https://pt.wikipedia.org/wiki/Matriz_de_transi%C3%A7%C3%A3o
+
+#https://marvinraval.medium.com/why-we-calculate-fibonacci-numbers-601762177277
+
+#https://medium.com/future-vision/fibonacci-sequence-algorithm-5eebae4e85be
+
+#https://medium.com/@cmchang/master-fibonacci-9b689facfe61
+
+#https://rpubs.com/rcleoni/cor_reg#:~:text=A%20equa%C3%A7%C3%A3o%20de%20regress%C3%A3o%20linear,calcular%20a%20regress%C3%A3o%20linear%20simples.&text=Assim%20como%20a%20maioria%20das,lm()%20%C3%A9%20uma%20lista.
+
+#https://www.rdocumentation.org/packages/matrixcalc/versions/1.0-3
+
+#https://demonstrations.wolfram.com/FibonacciDeterminants/  (verificar resultados)
+
+#https://pt.wikipedia.org/wiki/Sequ%C3%AAncia_de_Fibonacci#:~:text=Na%20matem%C3%A1tica%2C%20a%20Sucess%C3%A3o%20de,%C3%A0%20soma%20dos%20dois%20anteriores.&text=0%2C1%2C%201%2C%202,%2C%202584%2C%20...%20
+
+#https://core.ac.uk/download/pdf/145021195.pdf
+
+#https://www.datacamp.com/community/tutorials/markov-chain-analysis-r?utm_source=adwords_ppc&utm_campaignid=1455363063&utm_adgroupid=65083631748&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=332602034364&utm_targetid=aud-299261629574:dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1001686&gclid=EAIaIQobChMIoeyQ5on47AIVAwqRCh0jPQ1TEAAYASAAEgL3_vD_BwE
+
+#https://www.rdocumentation.org/packages/matrixcalc
+
+#https://stackoverflow.com/questions/49536400/create-a-tridiagonal-matrix
+
+
+install.packages("mrbsizeR") # pacote que pode ser usado para gerar automaticamente matrizes
+install.packages("SoDA")#pacote que utilizei para gerar matrizes automaticamente
+install.packages("matrixcalc") #pacote para calculos com matrizes
+uninstall.packages("Ryacas") #pacote para calcular limites em R que não funcionou
+install.packages("rSymPy") # outro pacote para calcular limites em R que não funcionou
+install.packages("elliptic") # pacote que também não consegui fazer funcionar para limites
+install.packages("matlib")
+
+
+
+#Exercício 1
+#Contrução da Matriz: onde I são linhas e J colunas
+
+#Matriz Base:
+#A11 A12 
+#A21 A22   
+
+#1 se i = J : Ou seja, se A 11, a 22, a 33, a 44, a 55.
+#-1 se i = J-1 : Ou seja, A12, a 23, a 34, a 45 .
+#1 se i = j +1 : Ou seja, A21, A 32, A 43 e A54
+#0 se para todos os outros  
+
+
+#Matriz base F5
+
+#A11  A12  A13  A14  A15
+#A21  A22   A23  A24  A25
+#A31  A32   A33  A34  A35    
+#A41  A42   A43  A44  A45
+#A51  A52   A53  A54  A55
+
+#Logo temos:
+	
+#1  -1   0   0  0    
+#1   1  -1   0  0
+#0   1   1  -1  0
+#0  0    1   1 -1
+#0  0   0    1  1
+
+
+#para gerar automaticamente as matrizes e gerar seus determinantes utilizei o pacote SoDA, 
+#portanto SoDA::triDiag(1, -1, 1, nrow = 21, ncol = 21 ) gera uma matriz banda tridiagonal
+#  de 21x21 onde a banda central é =1, a banda superior =-1 e a banda inferior é =1, seguindo
+#as propriedades da formula passada no exercício.
+
+
+#1 
+MF1 <- SoDA::triDiag(1, -1, 1, nrow = 1, ncol = 1 )# Criação de matriz inicial
+print(MF1) # exibe matriz para referência
+DET1 <- det(MF1) # cacula o determinante da matriz e joga para a variável DET1
+#2
+MF2 <- SoDA::triDiag(1, -1, 1, nrow = 2, ncol = 2 ) 
+print(MF2)
+DET2 <- det(MF2)
+print(DET2)
+#3
+MF3 <- SoDA::triDiag(1, -1, 1, nrow = 3, ncol = 3 )
+print(MF3)
+DET3 <- det(MF3)
+print(DET3)
+#4
+MF4 <- SoDA::triDiag(1, -1, 1, nrow = 4, ncol = 4 )
+print(MF4)
+DET4 <- det(MF4)
+print(DET4)
+#5
+MF5 <- SoDA::triDiag(1, -1, 1, nrow = 5, ncol = 5 ) #Criação da matriz 5x5, note, nrow e ncol definem sempre as dimensões da matriz
+print(MF5)
+DET5 <- det(MF5)
+print(DET5)
+#6
+MF6 <- SoDA::triDiag(1, -1, 1, nrow = 6, ncol = 6 ) #Criação da matriz 5x5, note, nrow e ncol definem sempre as dimensões da matriz
+print(MF6)
+DET6 <- det(MF6)
+print(DET6)
+#19
+MF19 <- SoDA::triDiag(1, -1, 1, nrow = 19, ncol = 19 )
+print(MF20)
+DET19 <- det(MF19)
+print(DET19)
+#20
+MF20 <- SoDA::triDiag(1, -1, 1, nrow = 20, ncol = 20 )
+print(MF20)
+DET20 <- det(MF20)
+print(DET20)
+#21
+MF21 <- SoDA::triDiag(1, -1, 1, nrow = 21, ncol = 21 )
+print(MF21)
+DET21 <- det(MF21)
+print(DET21)
+#22
+MF22 <- SoDA::triDiag(1, -1, 1, nrow = 22, ncol = 22 )
+print(MF22)
+DET22 <- det(MF22)
+print(DET22)
+#23
+MF23 <- SoDA::triDiag(1, -1, 1, nrow = 23, ncol = 23 )
+print(MF23)
+DET23 <- det(MF23)
+print(DET23)
+#597
+MF597 <- SoDA::triDiag(1, -1, 1, nrow = 597, ncol = 597 )
+print(MF597)
+DET597 <- det(MF597)
+print(DET597)
+#598
+MF598 <- SoDA::triDiag(1, -1, 1, nrow = 598, ncol = 598 )
+print(MF598)
+DET598 <- det(MF598)
+print(DET598)
+#599
+MF599 <- SoDA::triDiag(1, -1, 1, nrow = 599, ncol = 599 )
+print(MF599)
+DET599 <- det(MF599)
+print(DET599)
+#600
+MF600 <- SoDA::triDiag(1, -1, 1, nrow = 600, ncol = 600 )
+print(MF600)
+DET600 <- det(MF600)
+print(DET600)
+#601
+MF601 <- SoDA::triDiag(1, -1, 1, nrow = 601, ncol = 601 )
+print(MF601)
+DET601 <- det(MF601)
+print(DET601)
+
+
+# Processo de calculo das determinantes conforme exixigo na coluna 3 da tabela de exercícios 1.
+RDET1 <- DET2/DET1
+print(RDET1)
+RDET2 <- DET3/DET2
+print(RDET2)
+RDET3 <- DET4/DET3
+print(RDET3)
+RDET4 <- DET5/DET4
+print(RDET4)
+RDET5 <- DET6/DET5
+print(RDET5)
+RDET20 <- DET21/DET20
+print(RDET20)
+RDET21 <- DET22/DET21
+print(RDET21)
+RDET22 <- DET23/DET22
+print(RDET22)
+RDET598 <- DET599/DET598
+print(RDET598)
+RDET599 <- DET600/DET599
+print(RDET599)
+RDET600 <- DET601/DET600
+print(RDET600)
+
+#vizualização de resultados
+print(RDET1)
+print(RDET2)
+print(RDET3)
+print(RDET4)
+print(RDET5)
+print(RDET20)
+print(RDET21)
+print(RDET22)
+print(RDET598)
+print(RDET599)
+print(RDET600)
+
+
+#det (Fk)
+MF1401 <- SoDA::triDiag(1, -1, 1, nrow = 1401, ncol = 1401 )
+print(MF1401)
+DET1401 <- det(MF1401)
+print(DET1401)
+#portanto det (Fk) tende ao infinito.
+
+#det (Fk-1)
+MF1400 <- SoDA::triDiag(1, -1, 1, nrow = 1400, ncol = 1400 )
+print(MF1400)
+DET1400 <- det(MF1400)
+print(DET1400)
+
+# Calculando Lim de F(k)/F(k-1) quando K tende ao Infinito
+INFDET <- DET1401/DET1400
+print(INFDET)
+# portanto Lim de F(k)/F(k-1) quando K tende ao infinito -e = 1618034, proporção áurea.
+
+#Através do pacote Elliptc (não sei se está correto, é um teste.)
+x = c(DET1401/DET1400)
+limit(x, upper=quantile(Re(x),0.99,na.rm=TRUE),
+			lower=quantile(Re(x),0.98,na.rm=TRUE),
+			na = FALSE)
+
+
+#Exercício2
+#carregando pacotes necessários
+install.packages("markovchain") #optei por não utilizar tal pacote por ainda não ter conhecimento suficiente
+install.packages("matlab") # não teve resultados práticos
+library(markovchain)
+library(matlab)
+
+#Teste do algoritmo do pacote Markovchain
+ 
+statesNames <- c("a", "b", "c")
+markovB <- new("markovchain", states = statesNames, transitionMatrix =
+							 	matrix(c(0.2, 0.5, 0.3,
+							 					 0, 1, 0,
+							 					 0.1, 0.8, 0.1), nrow = 3, byrow = TRUE,
+							 				 dimnames = list(statesNames, statesNames)
+							 	))
+firstPassageMultiple(markovB,"a",c("b","c"),4) 
+# Algoritmo OK ! Vou continuar sem utilizar essa lib por não conhece-la tão bem
+
+#Importando a matriz de tranzição de T=0 (tempo zero, mesmos dados mostrados a planilha do exercício)
+
+MD2 <- c( .3, .2, .2, .3, .1,   # Cria os dados para a variável MD2 (fornecidos pelo exercício)
+					.2, .4, .2, .1, .1,
+					.2, .1, .4, .2, .2, 
+					.2, .2, .1, .3, .2, 
+					.1, .1, .1, .1, .4)
+MM2 = matrix(data = MD2, nrow = 5) # distribui os dados de MD2 na matriz MM2, não esquecer que por padrão a distribuição se dá ordenadamente por colunas.
+print(MM2)  # confira os dados 
+
+MM2 %*% MM2  # probabilidades após a primeira troca de carros, ou T=2 
+
+MM2T2 <- MM2 %*% MM2  
+print(MM2T2) # matriz de transição no tempo T=2. Conforme solicita o Exercício
+
+MM2T3 <- MM2 %*% MM2  %*% MM2  # T3 ..
+print(MM2T3)
+
+MM2T4 <- MM2 %*% MM2  %*% MM2 %*% MM2 # para índices percentuais efetivos, em T=4 as chances se estabilizam
+print(MM2T4)
+
+MM2T5 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2
+print(MM2T5)
+
+MM2T6 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T6)
+
+MM2T7 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T7)
+
+MM2T8 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T8)
+
+MM2T9 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T9)
+
+MM2T10 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T10)
+
+MM2T11 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T11)
+
+MM2T12 <- MM2 %*% MM2  %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2 %*% MM2
+print(MM2T12)
+
+
+
+#Exercício 3
+
+# transforma a matriz
+
+#a) XA = Y 
+#logo   |x1      1 |			|y1 |
+#		  	|x2      2 ||a|  =|y2 |
+#		    |(..)  (..)||b|		|y..|
+#			  |xn	   	 1 |			|y3 |
+
+# Que vai gerar a seguinte matriz resultante
+
+MT3 <- c( 0, 5, 10, 15, 20, 40, 45, 50, 55, 60, 
+					70, 71, 80, 85, 1, 1, 1, 1, 1, 1, 1, 
+					1, 1, 1, 1, 1, 1, 1)
+
+MMT3 = matrix(data = MT3, nrow = 14, ncol = 2) 
+print(MMT3)				# Matriz com os valores das idades, resultante  da formula
+
+MT4 <- c(14.1, 17.2, 20.6, 24.3, 28.2, 45.4, 49.9,
+				 54.4, 59.1, 63.9, 71.3, 73.1, 74.9, 76.3) 
+MMT4 = matrix(data = MT4, nrow = 14, ncol = 1 )
+print(MMT4) # Matriz Resultante Y
+
+# Calculando Y(x) = a(x) + B   Y=AX A=(X^tX)^-1(X^tY) Onde X vai ser a matrix MMT3 e Y a matriz
+#MMT4
+# para calcular tive que fazer o calculo passo a passo no R, ainda não sei como fazer por formula
+
+TMMT3 <- t(MMT3) #Transposta de X (MMT3) (X^t
+print(TMMT3) 
+PTMM3 <- TMMT3%*%MMT3 # Transposta de X*X ou X^tX
+print (PTMM3)
+INVMM3 <- solve(PTMM3) #inversa da matriz resultante ou (X^tX)^-1
+print(INVMM3)
+WTMM3 <- TMMT3%*%MMT4 # (outro lado da equação) (X^tY), transposta de X*Y, ou TTMT3*MMT4
+print(WTMM3)
+
+RAX <- INVMM3%*%WTMM3 # resultado final, multiplicação dos dois lados da equação
+print(RAX)
+
+# Portanto Y(x)= 0.796208 +  13.585568
+#[,1]
+#[1,]  0.796208
+#[2,] 13.585568
+
+#c) 2021 e 2050, segundo os dados informados para 2021 x= 88 e para 2050 x=117 Portanto:
+
+X2021 = c(88)
+X2050 = c(117)
+
+# para 2021Y(x)= 0.796208(x) +  13.585568 ---- Y(88)= 0.796208(88) +  13.585568
+XR2021 <- 0.796208*(X2021) +  13.585568
+print(XR2021)
+
+# para 2050 Y(x)= 0.796208(x) +  13.585568 ---- Y(x)= 0.796208(117) +  13.585568
+XR2050 <- 0.796208*(X2050) +  13.585568
+print(XR2050)
+
